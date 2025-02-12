@@ -1,0 +1,3 @@
+[submodule "gh-actions-fun-submodule"]
+	path = gh-actions-fun-submodule
+	url = git@github.com:MarcoSterpe/gh-actions-fun-submodule.git

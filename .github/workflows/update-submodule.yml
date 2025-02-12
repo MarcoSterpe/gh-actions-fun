@@ -1,0 +1,35 @@
+name: Update Submodule
+
+on:
+  push:
+    branches:
+      - master  # This should be the branch you're merging PRs into in the submodule repo
+    paths:
+      - 'gh-actions-fun-submodule/*'  # Path to the submodule directory
+
+jobs:
+  update-submodule:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      uses: actions/setup-git@v2
+
+    - name: Configure Git for commit
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+
+    - name: Update submodule
+      run: |
+        git submodule update --remote submodules/repo
+        git add submodules/repo
+        git commit -m "Update submodule to latest commit"
+
+    - name: Push changes
+      run: |
+        git push origin HEAD:refs/heads/submodule-update-branch
+        git pull request create --title "Update submodule commit" --body "This PR updates the submodule commit hash" --base master --head submodule-update-branch
