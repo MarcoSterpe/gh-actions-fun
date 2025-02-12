@@ -3,7 +3,7 @@ name: Update Submodule
 on:
   push:
     branches:
-      - master  # This should be the branch you're merging PRs into in the submodule repo
+      - main  # This should be the branch you're merging PRs into in the submodule repo
     paths:
       - 'gh-actions-fun-submodule'  # Path to the submodule directory
 
