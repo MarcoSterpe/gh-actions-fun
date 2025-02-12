@@ -5,7 +5,7 @@ on:
     branches:
       - master  # This should be the branch you're merging PRs into in the submodule repo
     paths:
-      - 'gh-actions-fun-submodule/*'  # Path to the submodule directory
+      - 'gh-actions-fun-submodule'  # Path to the submodule directory
 
 jobs:
   update-submodule:
