@@ -31,7 +31,6 @@ jobs:
     #Setup git
     - name : Set up git
       id: set_up_git
-      if: steps.checkout.outcome == 'success'
       run: |
         git config --global user.name 'Git bot'
         git config --global user.email 'bot@noreply.github.com'
@@ -40,7 +39,6 @@ jobs:
     #Reset branch to main
     - name : Reset branch
       id: reset_branch
-      if: steps.checkout.set_up_git == 'success'
       run: |
         git switch $GitBranch
         git reset origin/$MainBranch --hard
@@ -49,23 +47,16 @@ jobs:
     # Update references
     - name: Update references 
       id: update_ref
-      if: steps.checkout.reset_branch == 'success'
       run: |
         git pull --recurse-submodules
         git submodule update --remote --recursive
 
     - name: Commit update
       id: commit
-      if: steps.update_ref.reset_branch == 'success'
       run: |
         git switch $GitBranch
         git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
         git push --set-upstream origin $GitBranch -f
-        
-
-    - name: create pull request
-      id: pr
-      if: steps.commit.reset_branch == 'success'
-      run: gh pr create -B $GitBranch -H main --title 'Merge automatic-update into main' --body 'Created by Github action'
+        gh pr create -B $GitBranch -H main --title 'Merge automatic-update into main' --body 'Created by Github action'        
       env:
           GITHUB_TOKEN: ${{ secrets.GHA_UPDATE }}
