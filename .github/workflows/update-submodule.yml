@@ -40,7 +40,8 @@ jobs:
     # Update references
     - name: Git Submodule branch
       run: |
-        git submodule update --init --recursive
+        git pull --recurse-submodules
+        git submodule update --remote --recursive
     
     # Checkout branch
     - name: Git Submodule Update
