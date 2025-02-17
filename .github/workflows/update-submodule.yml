@@ -35,11 +35,18 @@ jobs:
         git pull
         git switch $GitBranch
         git reset origin/$MainBranch --hard
-    
+        git switch $MainBranch
+
     # Update references
+    - name: Git Submodule branch
+      run: |
+        git pull --recurse-submodules
+        git submodule update --remote --recursive
+    
+    # Checkout branch
     - name: Git Submodule Update
       run: |
-        git submodule update --init --recursive
+        git switch $GitBranch
         git push --set-upstream origin $GitBranch -f
 
     - name: Commit update
