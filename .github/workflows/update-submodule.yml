@@ -57,6 +57,6 @@ jobs:
         git switch $GitBranch
         git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
         git push --set-upstream origin $GitBranch -f
-        gh pr create -B $GitBranch -H main --title 'Merge automatic-update into main' --body 'Created by Github action'        
+        gh pr create -B $MainBranch -H $GitBranch --title 'Merge automatic-update into main' --body 'Created by Github action'        
       env:
           GITHUB_TOKEN: ${{ secrets.GHA_UPDATE }}
