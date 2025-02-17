@@ -11,6 +11,7 @@ jobs:
     name: 'Submodules Sync'
     env:
       GitBranch: automatic-update
+      MainBranch: main
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -31,17 +32,14 @@ jobs:
       run: |
         git config --global user.name 'Git bot'
         git config --global user.email 'bot@noreply.github.com'
+        git switch $GitBranch
+        git pull
+        git reset origin/$MainBranch --hard
     
     # Update references
-    - name: Git Submodule branch
-      run: |
-        git pull --recurse-submodules
-        git submodule update --remote --recursive
-    
-    # Checkout branch
     - name: Git Submodule Update
       run: |
-        git switch $GitBranch
+        git submodule update --init --recursive
         git push --set-upstream origin $GitBranch -f
 
     - name: Commit update
