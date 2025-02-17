@@ -32,10 +32,6 @@ jobs:
       run: |
         git config --global user.name 'Git bot'
         git config --global user.email 'bot@noreply.github.com'
-        git pull
-        git switch $GitBranch
-        git reset origin/$MainBranch --hard
-        git switch $MainBranch
     
     # Update references
     - name: Git Submodule branch
