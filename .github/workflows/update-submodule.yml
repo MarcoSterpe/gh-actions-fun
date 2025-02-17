@@ -2,7 +2,7 @@ name: 'Submodules Sync'
 
 on:
   repository_dispatch:
-    types: [trigger-workflow]
+    types: [trigger-common-update]
 
 jobs:
   sync:
