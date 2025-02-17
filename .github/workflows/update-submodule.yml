@@ -32,17 +32,17 @@ jobs:
         git config --global user.name 'Git bot'
         git config --global user.email 'bot@noreply.github.com'
     
-    # Checkout branch
-    - name: Git checkout branch
+    # Update references
+    - name: Git Submodule branch
       run: |
         git pull --recurse-submodules
         git submodule update --remote --recursive
-
-    # Update references
+    
+    # Checkout branch
     - name: Git Submodule Update
       run: |
-        git branch $GitBranch
-        git push --set-upstream origin $GitBranch
+        git switch $GitBranch
+        git push --set-upstream origin $GitBranch -f
 
     - name: Commit update
       run: |
