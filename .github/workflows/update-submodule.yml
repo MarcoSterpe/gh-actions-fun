@@ -7,6 +7,8 @@ on:
 jobs:
   sync:
     name: 'Submodules Sync'
+    env:
+      GitBranch: automatic-update
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -17,20 +19,35 @@ jobs:
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
-      uses: actions/checkout@latest
+      uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         submodules: true
 
-    # Update references
-    - name: Git Submodule Update
+    #Setup git
+    - name : Set up git
+      run: |
+        git config --global user.name 'Git bot'
+        git config --global user.email 'bot@noreply.github.com'
+    
+    # Checkout branch
+    - name: Git checkout branch
       run: |
         git pull --recurse-submodules
         git submodule update --remote --recursive
 
+    # Update references
+    - name: Git Submodule Update
+      run: |
+        git branch $GitBranch
+        git push --set-upstream origin $GitBranch
+
     - name: Commit update
       run: |
-        git config --global user.name 'Git bot'
-        git config --global user.email 'bot@noreply.github.com'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
+
+    - name: create pull request
+      run: gh pr create -B $GitBranch -H main --title 'Merge automatic-update into main' --body 'Created by Github action'
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
