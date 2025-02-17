@@ -64,6 +64,8 @@ jobs:
         
 
     - name: create pull request
+      id: pr
+      if: steps.commit.reset_branch == 'success'
       run: gh pr create -B $GitBranch -H main --title 'Merge automatic-update into main' --body 'Created by Github action'
       env:
           GITHUB_TOKEN: ${{ secrets.GHA_UPDATE }}
