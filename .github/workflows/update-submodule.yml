@@ -3,6 +3,8 @@ name: 'Submodules Sync'
 on:
   repository_dispatch:
     types: [trigger-common-update]
+  #trigger by hand
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -21,7 +23,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GHA_UPDATE }}
         submodules: true
 
     #Setup git
@@ -44,10 +46,10 @@ jobs:
 
     - name: Commit update
       run: |
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git remote set-url origin https://x-access-token:${{ secrets.GHA_UPDATE }}@github.com/${{ github.repository }}
         git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
 
     - name: create pull request
       run: gh pr create -B $GitBranch -H main --title 'Merge automatic-update into main' --body 'Created by Github action'
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHA_UPDATE }}
